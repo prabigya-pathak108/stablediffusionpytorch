@@ -1,8 +1,8 @@
 import torch
-from clip.clip import CLIP 
-from vae.encoder import Encoder
-from vae.decoder import Decoder
-from UNet.diffusion import Diffusion
+from .clip.clip import CLIP 
+from .vae.encoder import Encoder
+from .vae.decoder import Decoder
+from .UNet.diffusion import Diffusion
 
 from . import util
 import warnings

@@ -2,9 +2,8 @@ import torch
 import numpy as np
 from PIL import Image
 from tqdm import tqdm
-from . import Tokenizer
-from . import KLMSSampler, KEulerSampler, KEulerAncestralSampler
-from .samplers.ddpm import DDPMSampler
+from .tokenizer import Tokenizer
+from .samplers import KLMSSampler, KEulerSampler, DDPMSampler
 from . import util
 from . import model_loader
 
@@ -81,11 +80,11 @@ def generate(
             raise ValueError("length of uncond_prompts must be same as length of prompts")
         uncond_prompts = uncond_prompts or [""] * len(prompts)
 
-        if input_images and not isinstance(uncond_prompts, (list, tuple)):
+        if input_images and not isinstance(input_images, (list, tuple)):
             raise ValueError("input_images must be a non-empty list or tuple if provided")
         if input_images and len(prompts) != len(input_images):
             raise ValueError("length of input_images must be same as length of prompts")
-        if not 0 < strength < 1:
+        if not 0 < strength <= 1:
             raise ValueError("strength must be between 0 and 1")
 
         if height % 8 or width % 8:
@@ -130,15 +129,12 @@ def generate(
             sampler = KLMSSampler(n_inference_steps=n_inference_steps)
         elif sampler == "k_euler":
             sampler = KEulerSampler(n_inference_steps=n_inference_steps)
-        elif sampler == "k_euler_ancestral":
-            sampler = KEulerAncestralSampler(n_inference_steps=n_inference_steps,
-                                             generator=generator)
         elif sampler == "ddpm":
             sampler = DDPMSampler(n_inference_steps=n_inference_steps)
         else:
             raise ValueError(
                 "Unknown sampler value %s. "
-                "Accepted values are {k_lms, k_euler, k_euler_ancestral}"
+                "Accepted values are {k_lms, k_euler, ddpm}"
                 % sampler
             )
 

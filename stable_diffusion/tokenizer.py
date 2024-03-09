@@ -3,7 +3,7 @@ import functools
 import itertools
 import json
 from typing import List, Tuple
-import regex as re
+import re
 from . import util
 
 
